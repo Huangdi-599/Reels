@@ -1,13 +1,16 @@
 import { StatusBar, Text, View ,ScrollView, Image} from 'react-native'
 import React from 'react'
-import {router } from 'expo-router'
+import {Redirect, router } from 'expo-router'
 import { StyledComponent } from 'nativewind'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import logo from '@/assets/images/reels.png'
 import ReelsButton from '@/components/Shared/ReelsButton'
 import { StyledImage } from '@/components/NativeComponents/StyledViewText'
-
+import { useGlobalContext } from '@/contexts/GlobalProvider'
 const App = () => {
+  const {isLoading, isLoggedIn} = useGlobalContext()
+
+  if (!isLoading && isLoggedIn) return <Redirect href="/home" />
   return (
     <StyledComponent component={SafeAreaView} className='bg-[#1a1a1a] h-full'>
       <ScrollView contentContainerStyle={{height:'100%'}}>

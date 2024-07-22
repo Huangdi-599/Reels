@@ -6,26 +6,30 @@ import logo from '@/assets/images/reels.png'
 import FormField from '@/components/Shared/FormField'
 import {useState} from 'react'
 import ReelsButton from '@/components/Shared/ReelsButton'
-import { Link } from 'expo-router'
-import {signIn} from '@/lib/appwrite'
+import { Link,router } from 'expo-router'
+import {getUserDetail, signIn} from '@/lib/appwrite'
+import { useGlobalContext } from '@/contexts/GlobalProvider'
 const SignIn = () => {
   const [submitting, setSubmitting] = useState(false)
   const [form, setForm]=useState({
     email:'',
     password:''
   })
+  const {setIsLoggedIn, setUser}=useGlobalContext()
   const submit = async ()=>{
     if (!form.password || !form.email){
       Alert.alert('Error', 'Please fill in all the fields')
     }
     setSubmitting(true)
     try {
-      const response = await signIn(
+      await signIn(
         form.email,
         form.password,
       )
-      console.log(response)
-      //Set to Global state
+      const response = await getUserDetail()
+      setUser(response)
+      setIsLoggedIn(true)
+      Alert.alert("Success", "Signed in  successfully")
       router.replace('/home')
     } catch (error:any) {
       Alert.alert('Error',error.message)

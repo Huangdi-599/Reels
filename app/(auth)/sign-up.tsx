@@ -8,8 +8,9 @@ import {useState} from 'react'
 import ReelsButton from '@/components/Shared/ReelsButton'
 import { Link , router} from 'expo-router'
 import {createUser} from '@/lib/appwrite'
-
+import { useGlobalContext } from '@/contexts/GlobalProvider'
 const SignUp = () => {
+  const {setIsLoggedIn, setUser} = useGlobalContext()
   const [submitting, setSubmitting] = useState(false)
   const [form, setForm]=useState({
     username:'',
@@ -27,8 +28,10 @@ const SignUp = () => {
         form.password,
         form.username
       )
-      console.log(response)
       //Set to Global state
+      setUser(response)
+      setIsLoggedIn(true)
+      console.log(response)
       router.replace('/home')
     } catch (error:any) {
       Alert.alert('Error',error.message)
